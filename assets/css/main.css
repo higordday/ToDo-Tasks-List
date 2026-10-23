@@ -1,0 +1,288 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+:root
+{
+
+    --main-font: 'Poppins', sans-serif;
+
+    --main-color: #af1820;
+    --dark-main-color: #7c1217;
+
+    --text-color: #ffffff;
+    --muted-text-color: rgba(255, 255, 255, 0.6);
+    --ghost-text-color: rgba(255, 255, 255, 0.4);
+
+    --second-text-color: #000000;
+
+    --f-background: #0d0f14;
+    --s-background: #16181d;
+    --t-background: #24282e;
+    
+}
+
+* 
+{
+
+    padding: 0;
+    margin: 0;
+    font-family: var(--main-font);
+    font-style: normal;
+    font-weight: 500;
+    color: var(--text-color);
+    text-decoration: none;
+    box-sizing: border-box;
+
+}
+
+body { background-color: var(--f-background); }
+
+.main 
+{
+
+    display: flex;
+    justify-content: center;
+    margin: 60px 0px;
+
+}
+
+.main__center { width: 1200px; }
+
+.main__center-create
+{
+
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--t-background);
+    display: flex;
+    justify-content: end;
+
+}
+
+.main__center-create form 
+{
+
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+}
+
+.main__center-create form input, .main__center-create form button 
+{
+
+    outline: none;
+    border: none;
+    font-size: 9.5pt;
+
+}
+
+.main__center-create form input 
+{
+
+    padding-left: 15px;
+    width: 300px;
+    height: 45px;
+    background-color: var(--s-background);
+    border-radius: 20px;
+    color: var(--muted-text-color);
+
+}
+
+.main__center-create form button 
+{
+
+    padding: 0px 25px;
+    height: 42px;
+    background-color: var(--main-color);
+    border-radius: 10px;
+    color: var(--second-text-color);
+    cursor: pointer;
+    transition: 0.4s;
+
+}
+
+.main__center-create form button i 
+{
+
+    color: var(--second-text-color);
+    opacity: 0.6;
+    margin-right: 10px;
+
+}
+
+.main__center-create form button:hover { background-color: var(--dark-main-color); }
+
+.main__center-tasks { margin-top: 40px; }
+
+.main__center-tasks__none p 
+{
+
+    padding: 12px 18px;
+    background-color: var(--s-background);
+    color: var(--ghost-text-color);
+    font-size: 9.5pt;
+
+}
+
+.main__center-tasks__none p i 
+{
+
+    opacity: 0.6;
+    margin-right: 10px;
+
+}
+
+.task 
+{
+
+    padding: 15px;
+    background-color: var(--s-background);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0px;
+
+}
+
+.task__right 
+{
+
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+}
+
+.task__right-complete button 
+{
+
+    outline: none;
+    border: none;
+    width: 18px;
+    height: 18px;
+    background-color: var(--f-background);
+    border-radius: 5px;
+    display: block;
+    cursor: pointer;
+
+}
+
+.task__right-complete button.task__right-complete__active { background-color: rgba(70, 173, 33, 0.5); }
+
+.task__right-content p 
+{
+
+    color: var(--muted-text-color);
+    font-size: 9.5pt;
+
+}
+
+.task__right-status span 
+{
+
+    padding: 5px 15px;
+    width: 110px;
+    background-color: var(--f-background);
+    display: flex;
+    justify-content: center;
+    color: var(--ghost-text-color);
+    font-size: 9pt;
+
+}
+
+.task__actions 
+{
+
+    display: flex;
+    gap: 15px;
+
+}
+
+.task__actions a, .task__actions button 
+{
+
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 9pt;
+    transition: 0.4s;
+
+}
+
+.task__actions a i, .task__actions button i { margin-right: 10px; }
+
+.task__actions a 
+{ 
+    
+    background-color: var(--f-background); 
+    color: var(--ghost-text-color);
+
+}
+
+.task__actions a i { opacity: 0.6; }
+
+.task__actions a:hover { background-color: var(--t-background); }
+
+.task__actions button 
+{
+
+    outline: none;
+    border: none;
+    background-color: rgba(175, 24, 32, 0.1);
+    color: #af1820;
+    cursor: pointer;
+
+}
+
+.task__actions button i { color: #af1820; }
+
+.task__actions button:hover { background-color: var(--dark-main-color); }
+
+.message_modal 
+{
+
+    position: fixed;
+    z-index: 9999;
+    top: 0px;
+    left: 0px;
+    padding: 50px 50px 0px 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(2, 2, 2, 0.9);
+    display: flex;
+    justify-content: end;
+    align-items: first baseline;
+
+}
+
+.message_modal__main 
+{
+
+    padding: 20px 25px;
+    width: 400px;
+    border-radius: 10px;
+    font-size: 10pt;
+    text-align: justify;
+
+} 
+
+.message_modal__main-failure { background-color: rgba(175, 24, 32, 0.1); }
+
+.message_modal__main-failure p { color: #af1820; }
+
+.message_modal__main-success { background-color: rgba(70, 173, 33, 0.1); }
+
+.message_modal__main-success p { color: #46ad21; }
+
+@media screen and (max-width: 450px) 
+{
+
+    .message_modal__main { width: 350px; }
+
+}
+
+@media screen and (max-width: 1250px) 
+{
+
+    .main__center { width: 100%; }
+
+}

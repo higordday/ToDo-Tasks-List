@@ -1,0 +1,248 @@
+<?php 
+
+session_start(); 
+
+require_once __DIR__ . '/../php/models/list.php';
+
+$tasks = tasks_lister::get();
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ToDo Tasks List</title>
+
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha512-QeR2VH+lsBE5LSAe1Q5EnTBbe7XTBubt8dG93Y7gidSgdMCr8nVqKcfKAMyN96SV8KDbZVTDXChatu5G2KQGzg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+</head>
+<body>
+
+    <main class="main">
+        <section class="main__center">
+
+            <div class="main__center-create">
+                <?php
+                
+                    $task_action = 'create';
+
+                    if (isset($_GET['edit'])) 
+                    {
+
+                        $task_id = $_GET['edit'];
+
+                        require_once __DIR__ . '/../php/models/update.php';
+
+                        $edit_task_model = new edit_task_model();
+
+                        list($task_exists, $task_content) = $edit_task_model->exists($task_id);
+
+                        $task_action = 'update';
+
+                    }
+                
+                ?>
+
+                <form action="<?php echo ($task_action == 'create') ? '../php/actions/create.php' : "../php/actions/update.php?task_id={$task_id}"; ?>" method="post">
+
+                    <?php
+                    
+                        if ($task_action == 'update') 
+                        {
+
+                            if ($task_exists) 
+                            {
+
+                                ?>
+
+                                    <input type="text" name="task" placeholder="Task" value="<?php echo $task_content['task']; ?>">
+                                    <button type="submit" name="submit_button"><i class="fa-solid fa-save"></i>Save</button>
+
+                                <?php
+
+                            } else { ?> <script type="text/javascript"> window.location.href = '/'; </script> <?php }
+
+                        } else 
+                        {
+                            
+                            ?>
+
+                            <input type="text" name="task" placeholder="New Task">
+                            <button type="submit" name="submit_button"><i class="fa-solid fa-plus"></i>Add Task</button>
+
+                            <?php
+                            
+                        }
+                    
+                    ?>
+
+                </form>
+            </div>
+
+            <div class="main__center-tasks">
+
+                <?php
+                
+                    if (count($tasks) == 0) 
+                    {
+
+                        ?>
+
+                        <div class="main__center-tasks__none"><p><i class="fa-solid fa-info-circle"></i>No Tasks</p></div>
+
+                        <?php
+
+                    } else 
+                    {
+                        foreach ($tasks as $task) 
+                        {
+
+                            ?>
+
+                            <div class="task">
+                                <div class="task__right">
+                                    <div class="task__right-complete"><button type="button" onclick="switch_task_status('<?php echo $task['id']; ?>')" class="<?php echo ($task['status'] == 'completed') ? 'task__right-complete__active' : ''; ?>"></button></div>
+
+                                    <div class="task__right-content"><p><?php echo htmlspecialchars($task['task']); ?></p></div>
+
+                                    <div class="task__right-status"><span><?php echo ucfirst($task['status']); ?></span></div>
+                                </div>
+
+                                <div class="task__actions">
+                                    <a href="?edit=<?php echo $task['id']; ?>"><i class="fa-solid fa-pen-to-square"></i>Edit</a>
+                                    <button type="button" onclick="delete_task('<?php echo $task['id']; ?>')"><i class="fa-solid fa-trash"></i>Exclude</button>
+                                </div>
+                            </div>
+
+                            <?php
+
+                        }
+                    }
+                
+                ?>
+
+            </div>
+
+        </section>
+    </main>
+
+    <?php
+    
+        if (isset($_SESSION['message'])) 
+        {
+
+            ?>
+
+            <div class="message_modal">
+                <section class="message_modal__main <?php echo ($_SESSION['message']['type'] == 'failure') ? 'message_modal__main-failure' : 'message_modal__main-success'; ?>">
+
+                    <p><?php echo $_SESSION['message']['text']; ?></p>
+
+                </section>
+
+                <script type="text/javascript">
+
+                    const message_modal = document.querySelector('.message_modal');
+
+                    message_modal.addEventListener('click', (event) => { if (event.target.className == 'message_modal') { message_modal.style.display = 'none'; } });
+
+                </script>
+            </div>
+
+            <?php
+
+            unset($_SESSION['message']);
+
+        }
+    
+    ?>
+
+    <script type="text/javascript">
+
+        function delete_task(id) 
+        {
+
+            fetch
+            (
+                '../php/actions/del.php', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id }) }
+
+            ).then( (response) => 
+            {
+
+                if (!response.ok) 
+                {
+
+                    console.error('Task Deletion Failure - DELETE HTTP Request Failed'); alert('Failed to delete Task'); return;
+
+                }
+
+                return response.json();
+
+            }).then( (data) => 
+            {   
+
+                if (!data.status) { alert(data.error); return; }
+
+                alert('Successfully deleted Task');
+
+                window.location.reload();
+
+            }).catch( (error) => 
+            {
+
+                console.error(error.message);
+
+                alert('Failed to delete Task');
+
+            });
+
+        }
+
+        function switch_task_status(task_id) 
+        {
+
+            fetch
+            (
+                '../php/actions/status.php', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: task_id }) }
+
+            ).then( (response) => 
+            {
+
+                if (!response.ok) 
+                {
+
+                    console.error('Task Status Switching Failure - PUT HTTP Request Failure'); alert('Failed to switch Task Status'); return;
+
+                }
+
+                return response.json();
+
+            }).then( (data) => 
+            {
+
+                if (data.status == false) { alert(data.error); return; }
+
+                alert('New Status');
+
+                window.location.reload();
+
+            }).catch( (error) => 
+            {
+
+                console.error(error.message);
+
+                alert('Failed to switch Task Status');
+
+            });
+
+        }
+
+    </script>
+    
+</body>
+</html>
