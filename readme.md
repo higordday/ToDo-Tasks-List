@@ -63,6 +63,9 @@ cd ToDo-Tasks-List
 
 # 3. Instale as dependências
 composer install
+
+# 4. Importe a estrutura SQL através do arquivo php/database/struct.sql
+mysql -u user -p todo_tasks_list < struct.sql
 ```
 
 ### Configuração
